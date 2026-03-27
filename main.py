@@ -5,6 +5,7 @@ import threading
 import os
 from pathlib import Path
 import json
+from waitress import serve
 
 intents = discord.Intents.default()
 intents.message_content = True 
@@ -39,6 +40,7 @@ def load_id_map():
             file.close()
         else:
             temp_f = {}
+            file.close()
         return temp_f
     else:
         file = open("id_map.json",'x', encoding="utf-8")
@@ -150,11 +152,20 @@ def handle_new_round():
     bot.loop.call_soon_threadsafe(bot.loop.create_task,unmute_all())
     return "OK"
 
-
-
 def run_flask():
-    app.run(host="0.0.0.0", port=5003)
+    serve(app, host="0.0.0.0", port=5003)
+
+def console():
+    while True:
+        cmd = input().strip().lower()
+
+        if cmd == "stop":
+            print("Shutting down")
+            save_id_map(steam_to_discord)
+            bot.loop.call_soon_threadsafe(bot.loop.create_task, bot.close())
+            os._exit(0)
 
 threading.Thread(target=run_flask).start()
+threading.Thread(target=console).start()
 
 bot.run(BOT_TOKEN) #
