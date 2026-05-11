@@ -15,20 +15,6 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-def load_config():
-    if Path("config.json").exists():
-        f = open("config.json", "r", encoding="utf-8")
-        f_temp = json.load(f)
-        f.close()
-        return f_temp
-    else:
-        default = {"GUILD_ID": 0, "BOT_TOKEN" : "-"}
-        f = open("config.json", "w", encoding="utf-8")
-        json.dump(default, f)
-        f.close()
-        print("Created default config")
-        os._exit(0)
-
 def load_id_map():
     if Path("id_map.json").exists():
         file = open("id_map.json",'r', encoding="utf-8")
@@ -52,9 +38,13 @@ def save_id_map(steam_dc):
     json.dump(steam_dc, file)
 
 steam_to_discord = load_id_map()
-config = load_config()
-GUILD_ID = config["GUILD_ID"]
-BOT_TOKEN = config["BOT_TOKEN"]
+
+try:
+    GUILD_ID = int(os.environ.get("GUILD_ID", 0))
+    BOT_TOKEN = os.environ.get("BOT_TOKEN","")
+except:
+    print("Error while loading GUILD_ID or/and BOT_TOKEN")
+    os._exit(0)
 
 print(f"GUILD_ID set to {GUILD_ID} and BOT_TOKEN set to {BOT_TOKEN}")
 
