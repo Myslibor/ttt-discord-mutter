@@ -62,7 +62,45 @@ async def on_command_error(ctx, error):
 async def tttbot_map(ctx, steam_id: str):
     discord_id = ctx.author.id
     steam_to_discord[steam_id] = discord_id
-    await ctx.send(f"Mapped SteamID64 {steam_id} to Discord ID {discord_id}")
+    await ctx.send(f"Mapped SteamID64 {steam_id} to Discord_ID {discord_id}")
+
+@bot.command()
+async def tttbot_map_dc(ctx, steam_id: str, discord_id: str):
+    steam_to_discord[steam_id] = discord_id
+    await ctx.send(f"Mapped SteamID64 {steam_id} to Discord_ID {discord_id}")
+
+@bot.command()
+async def tttbot_map_delete(ctx, steam_id: str):
+    if steam_id in steam_to_discord:
+        discord_id = steam_to_discord.pop(steam_id)
+        await ctx.send(f"Deleted mapping: SteamID64 {steam_id} -> Discord_ID {discord_id}")
+    else:
+        await ctx.send(f"No mapping found for SteamID64 {steam_id}")
+
+
+@bot.command()
+async def tttbot_map_reset(ctx):
+    steam_to_discord.clear()
+    save_id_map(steam_to_discord)
+    await ctx.send("id_map has been reset")
+
+@bot.command()
+async def tttbot_map_print(ctx):
+    if not steam_to_discord:
+        await ctx.send("No mappings found")
+        return
+    
+    lines = []
+    for steam_id, discord_id in steam_to_discord.items():
+        lines.append(f"SteamID64({steam_id}) -> Discord_ID({discord_id})")
+    lines = "\n".join(lines)
+    
+    if len(lines) > 1900:
+        for line in lines:
+            await ctx.send(line)
+    else:
+        await ctx.send(lines)
+
 
 @bot.command()
 async def tttbot_end(ctx):
