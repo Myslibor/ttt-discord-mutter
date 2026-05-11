@@ -16,11 +16,11 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 def load_id_map():
-    if Path("id_map.json").exists():
-        file = open("id_map.json",'r', encoding="utf-8")
+    if Path("data/id_map.json").exists():
+        file = open("data/id_map.json",'r', encoding="utf-8")
         file_content = file.read().strip()
         file.close()
-        file = open("id_map.json",'r', encoding="utf-8")
+        file = open("data/id_map.json",'r', encoding="utf-8")
         if file_content:
             temp_f = json.load(file)
             file.close()
@@ -29,12 +29,12 @@ def load_id_map():
             file.close()
         return temp_f
     else:
-        file = open("id_map.json",'x', encoding="utf-8")
+        file = open("data/id_map.json",'x', encoding="utf-8")
         file.close()
         return {}
     
 def save_id_map(steam_dc):
-    file = open("id_map.json",'w', encoding="utf-8")
+    file = open("data/id_map.json",'w', encoding="utf-8")
     json.dump(steam_dc, file)
 
 steam_to_discord = load_id_map()
@@ -183,17 +183,6 @@ def handle_new_round():
 def run_flask():
     serve(app, host="0.0.0.0", port=5003)
 
-def console():
-    while True:
-        cmd = input().strip().lower()
-
-        if cmd == "stop":
-            print("Shutting down")
-            save_id_map(steam_to_discord)
-            bot.loop.call_soon_threadsafe(bot.loop.create_task, bot.close())
-            os._exit(0)
-
 threading.Thread(target=run_flask).start()
-threading.Thread(target=console).start()
 
 bot.run(BOT_TOKEN) #

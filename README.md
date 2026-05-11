@@ -18,3 +18,6 @@ In discord:
 !tttbot_map_print - prints all mappings
 
 !tttbot_end - stops the bot
+
+Docker run example:
+docker run -d --name my-ttt-discord-bot -p 5003:5003 -v ttt-mutter-data:/app/data -e GUILD_ID={your guild id} -e BOT_TOKEN="{your bot token}" myslibor_ttt_bot:latest
