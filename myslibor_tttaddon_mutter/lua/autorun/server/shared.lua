@@ -56,4 +56,14 @@ if engine.ActiveGamemode() == "terrortown" then
 	hook.Add("TTTResurrected", "TTTUnMuteRessurected", function(ply)
 		sendToBot("/res", {steamid = ply:SteamID64()})
 	end)
+
+	concommand.Add("myslibor_printsteamid64", function(ply)
+		if IsValid(ply) and ply:IsPlayer() then
+			local id = ply:SteamID64()
+			print("Myslibor TTT Mutter: " .. ply:Nick() .. " SteamID64 = " .. id)
+			ply:ChatPrint("Your SteamID64: " .. id)
+		end
+	end)
+
+
 end

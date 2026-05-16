@@ -72,11 +72,14 @@ async def on_command_error(ctx, error):
 async def tttbot_map(ctx, steam_id: str):
     discord_id = ctx.author.id
     steam_to_discord[steam_id] = discord_id
+    save_id_map(steam_to_discord)
     await ctx.send(f"Mapped SteamID64 {steam_id} to Discord_ID {discord_id}")
 
 @bot.command()
 async def tttbot_map_dc(ctx, steam_id: str, discord_id: str):
-    steam_to_discord[steam_id] = discord_id
+    discord_id_int = int(discord_id)
+    steam_to_discord[steam_id] = discord_id_int
+    save_id_map(steam_to_discord)
     await ctx.send(f"Mapped SteamID64 {steam_id} to Discord_ID {discord_id}")
 
 @bot.command()
